@@ -1,0 +1,83 @@
+version: '3.7'
+services:
+  app: &app
+    build:
+      context: ./.dockerdev
+      dockerfile: Dockerfile
+      args:
+        RUBY_VERSION: '2.6.5'
+        PG_MAJOR: '12'
+        NODE_MAJOR: '10'
+        YARN_VERSION: '1.22.4'
+        BUNDLER_VERSION: '1.17.3'
+    image: p91challenge/rails:latest
+    tmpfs:
+      - /tmp
+
+  backend: &backend
+    <<: *app
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./.ssh:/home/rails/.ssh:delegated
+      - .:/app:delegated
+      - rails_cache:/app/tmp/cache
+      - gems_cache:/bundle
+      - node_modules_cache:/app/node_modules
+      - packs:/app/public/packs
+      - .dockerdev/.psqlrc:/root/.psqlrc:ro
+    environment:
+      - TZ=Europe/Madrid
+      - NODE_ENV=development
+      - RAILS_ENV=${RAILS_ENV:-development}
+      #- DATABASE_URL=postgres://postgres:@db:5432/orgcloud_development # Commented: read databases.yml instead
+      - BOOTSNAP_CACHE_DIR=/bundle/bootsnap
+      - WEBPACKER_DEV_SERVER_HOST=webpacker
+      - WEB_CONCURRENCY=1
+      - HISTFILE=/app/log/.bash_history
+      - PSQL_HISTFILE=/app/log/.psql_history
+      - EDITOR=vi
+      - FILE_UPDATE_CHECKER=true
+    depends_on:
+      - db
+      - webpacker
+
+  runner:
+    <<: *backend
+    command: /bin/bash
+    ports:
+      - '3000:3000'
+      - '3002:3002'
+
+  rails:
+    <<: *backend
+    command: ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
+    extra_hosts:
+      - "www.example.com:127.0.0.1"
+    ports:
+      - '3000:3000'
+
+  webpacker:
+    <<: *backend
+    command: ['bundle', 'exec', 'webpack-dev-server']
+    ports:
+      - '3035:3035'
+    depends_on:
+      - db
+
+  db:
+    image: postgres:12
+    volumes:
+      - ./docker-data/db-12-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+#    ports:
+#      - "5432:5432"
+volumes:
+  gems_cache:
+  node_modules_cache:
+  packs:
+  rails_cache:
