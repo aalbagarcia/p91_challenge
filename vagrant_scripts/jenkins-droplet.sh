@@ -29,6 +29,10 @@ apt-get install -y \
     gnupg-agent \
     software-properties-common
 apt-get install -y docker-ce docker-ce-cli containerd.io
+cp /vagrant/docker.service /usr/lib/systemd/system/docker.service
+cp /vagrant/jenkins.daemon.json /etc/docker/daemon.json
+systemctl daemon-reload
+systemctl restart docker
 usermod -a -G docker jenkins
 
 echo "Installing docker compose..."

@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.box   = "base"
 
-	config.vm.synced_folder ".", "/vagrant", disabled: true
+	config.vm.synced_folder "./vagrant_scripts", "/vagrant", disabled: false, type: "rsync"
 
   # config.vm.network "private_network", ip: "192.168.33.10"
   # config.vm.network "public_network"
@@ -61,7 +61,7 @@ Vagrant.configure("2") do |config|
 			#provider.image = 'jenkins-18-04'
 			provider.image = 'ubuntu-19-10-x64'
       provider.region = 'ams3'
-      provider.size = '1gb'
+      provider.size = 's-1vcpu-2gb'
       provider.backups_enabled = false
       provider.private_networking = true
       provider.ipv6 = false
