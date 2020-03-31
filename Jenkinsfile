@@ -13,6 +13,9 @@ pipeline {
         }
         stage('Test') { 
             steps {
+                // Set folder permissions
+                // TODO: add git tool to store file metadata
+                sh 'chmod 777 test/reports'
                 sh 'docker-compose -f docker-compose-test.yml run --rm runner'
                 junit 'test/reports/*.xml'
             }
