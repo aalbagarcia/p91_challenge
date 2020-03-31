@@ -42,7 +42,7 @@ services:
   db:
     image: postgres:12
     volumes:
-      - ./docker-data/db-12-data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -52,3 +52,6 @@ services:
       POSTGRES_PASSWORD: postgres
 #    ports:
 #      - "5432:5432"
+
+volumes:
+  db_data:
