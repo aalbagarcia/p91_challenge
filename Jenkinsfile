@@ -11,10 +11,5 @@ pipeline {
                sh 'docker-compose -f docker-compose-test.yml run --rm runner'
             }
         }
-        stage('Deploy') {
-            steps {
-                // 
-            }
-        }
     }
 }
