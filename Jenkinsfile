@@ -21,7 +21,6 @@ pipeline {
     post {
         always {
             sh "docker-compose down -v"
-            sh 'rm -rf test/reports'
         }
     }
 }
