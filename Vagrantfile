@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
 
 	#hostmanager plugin configuration
   config.hostmanager.enabled = false
-  config.hostmanager.manage_host = true
+  config.hostmanager.manage_host = false
   config.hostmanager.manage_guest = true
   config.hostmanager.ignore_private_ip = false
   config.hostmanager.include_offline = false
@@ -33,7 +33,11 @@ Vagrant.configure("2") do |config|
       provider.ipv6 = false
       provider.monitoring = true
 			provider.ssh_key_name = do_ssh_key_name
-    end
+		end
+    # We use shell provisioning here.
+    # TODO: replace shell provisioning with ansible
+    config.vm.provision "shell", path: './vagrant_scripts/db-droplet.sh'
+
   end
 
   config.vm.define "core-droplet" do |config|
