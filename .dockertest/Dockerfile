@@ -77,6 +77,7 @@ ENV PATH /app/bin:$BUNDLE_BIN:$PATH
 RUN mkdir -p /app && mkdir -p /bundle && chown rails:rails /app && chown rails:rails /bundle
 # Copy the app code
 COPY  --chown=rails:rails . /app
+RUN chmod 777 /app/test/reports
 # Copy gems and node modules from previous step.
 COPY --from=bundler_stage --chown=rails:rails /bundle /bundle
 COPY --from=bundler_stage --chown=rails:rails /app/node_modules /app/node_modules
