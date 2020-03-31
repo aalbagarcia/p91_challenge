@@ -1,0 +1,54 @@
+version: '3.7'
+services:
+  app: &app
+    build:
+      context: .
+      dockerfile: ./.dockertest/Dockerfile
+      args:
+        RUBY_VERSION: '2.6.5'
+        PG_MAJOR: '12'
+        NODE_MAJOR: '10'
+        BUNDLER_VERSION: '1.17.3'
+    image: p91challenge/test:latest
+    tmpfs:
+      - /tmp
+
+  backend: &backend
+    <<: *app
+    stdin_open: true
+    tty: true
+    environment:
+      - TZ=Europe/Madrid
+      - NODE_ENV=development
+      - RAILS_ENV=${RAILS_ENV:-development}
+      #- DATABASE_URL=postgres://postgres:@db:5432/orgcloud_development # Commented: read databases.yml instead
+      - BOOTSNAP_CACHE_DIR=/bundle/bootsnap
+      - WEBPACKER_DEV_SERVER_HOST=webpacker
+      - WEB_CONCURRENCY=1
+      - HISTFILE=/app/log/.bash_history
+      - PSQL_HISTFILE=/app/log/.psql_history
+      - EDITOR=vi
+      - FILE_UPDATE_CHECKER=true
+    depends_on:
+      - db
+
+  runner:
+    <<: *backend
+    volumes:
+      - ./test/reports:/app/test/reports
+    ports:
+      - '3000:3000'
+
+  db:
+    image: postgres:12
+    volumes:
+      - ./docker-data/db-12-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_PASSWORD: postgres
+#    ports:
+#      - "5432:5432"

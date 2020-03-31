@@ -2,6 +2,14 @@ ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
 
+Minitest::Reporters.use!(
+    [
+        Minitest::Reporters::JUnitReporter.new(ENV['JUNIT_REPORTS_DIR'] || 'test/reports'), Minitest::Reporters::MeanTimeReporter.new, Minitest::Reporters::ProgressReporter.new
+    ],
+    ENV,
+    Minitest.backtrace_filter
+)
+
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
