@@ -151,6 +151,9 @@ Bringing machine 'jenkins-droplet' up with 'digital_ocean' provider...
 ==> jenkins-droplet: Private IP address: 10.110.0.3
 ```
 
+This command may take some time because it will also provision the drooplets. You can find
+the provision shell scripts in the directory `vagrant_scripts`.
+
 After the droplets are up and running, we run the `vagrant-hostmanager` plugin
 to set the `/etc/hosts` file in all the droplets:
 
@@ -158,6 +161,34 @@ to set the `/etc/hosts` file in all the droplets:
 > vagrant hostmanager --provider=digital_ocean
 ```
 
+### Finish the installation of jenkins
+
+After provisioning the `jenkins-droplet` you will get a message like
+the following:
+
+```bash
+jenkins-droplet: ####################################
+jenkins-droplet: Waiting for jenkins installation password...
+jenkins-droplet: The jenkins installation password id:
+jenkins-droplet: 5cf146f8fd4742939b909f375bde52cd
+jenkins-droplet: Go to http://188.166.18.109:8080 to finish the instalacion of jenkins
+jenkins-droplet: ####################################
+```
+
+Open the URL and follow the instructions to finish the installation of Jenkins.
+
+Once installed, create a new Task of type `Pipeline`. I will name this task `p91-challenge` and refer to it
+using this name in this document.
+
+Set up the following options:
+* Build Triggers: `GitHub hook trigger for GITScm polling`
+* Pipeline: Use `Pipeline script fom SCM` for the definition ot the pipeline 
+  and select git as SCM. Use the URL for this repository.
+
+
+### Add a Github webhook
+
+Add a github webhook using the following payload url: http://[jenkins-droplet public IP]:8080/github-webhook/
 
 # TO DO
 
@@ -173,5 +204,8 @@ why I made those decissions and write down things I had to skip in order to save
 - [ ] At the moment, the plugin `vagrant-hostmanager` is setting up the public ip addresses instead of the private ones.
   I can either replace this vagrant plugin with a better solution for node discovery (DNS service?)
   or investigate if the plugin allows to use the private IP's.
+- [ ] Use ansible instead of shell scripts to provision the droplets 
+- [ ] Add firewalls to the deployed droplets 
+- [ ] Properly store secrets for the production environment
   
     
