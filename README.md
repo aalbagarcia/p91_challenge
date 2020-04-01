@@ -190,6 +190,34 @@ Set up the following options:
 
 Add a github webhook using the following payload url: http://[jenkins-droplet public IP]:8080/github-webhook/
 
+### Tooling
+
+* __Containers__: I've chosen Docker as the container technology. Both because I'm familiar with it
+  and it's the de facto standard nowadays. I could have used podman, from RedHat since this is a very simple
+  project, but I decided to stick with the most known technology
+* __Container orchestration__: I choose to deploy the containers using docker-compose in the production environment.
+  Other options are Docker Swarm or Kubernetes. Since this is a very simple project, I choose to use docker-compose
+  because its simplicity
+* __Container Registry__: This is the place were we store docker images. Ichoose to use the public
+  docker registry (hub.docker.com). In a more realistic scenario, I've would have chosen
+  the [container registry of GCP](https://cloud.google.com/container-registry))
+* __CI/CD__: I choose Jenkins as the CI/CD server and used pipelines as the tool
+  to automate the workflows
+* __Infrastructure__: I choose to use Digital Ocean. Why Digital Ocean instead of Amazon, Google Cloud or Azure? Because it's the 
+  one I've used in previous projects and given the time constraints I decided to work
+  with a tool I'm familiar with. I also had the option of using local virtual machines with Virtual Box
+  but I discarded it for several reasons:
+  * I wanted to integrate Jenkins with Github, which is easier if you have everything deployed in the cloud 
+  * Digital ocean allows me to give you access to the infrastructure I was using in case you requested it 
+  * I wanted to use a cloud provider since your project is deployed in the cloud 
+* __Provisioninig__: I used Vagrant to create the droplets and shell scripts to provision the virtual machines. The 
+  configuration is also set using those shell scripts. Again, I choose not to use ansible for the sake of simplicity.
+  For provisioning I've used:
+  * Vagrant plugin to spin up droplets in Digital Ocean
+  * Vagrant plugin to set the `/etc/hosts` files in each droplet (I could not make work with the private IPs of the droplets
+    so this part requires some thinking and testing)
+  * Vagrant Sync folders to provision configuration files to the droplets 
+
 # TO DO
 
 Since I had a limited amount of time to perform this challenge, I had to make decissions
