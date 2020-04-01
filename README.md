@@ -196,9 +196,8 @@ Add a github webhook using the following payload url: http://[jenkins-droplet pu
   and it's the de facto standard nowadays. I could have used podman, from RedHat since this is a very simple
   project, but I decided to stick with the most known technology
 * __Container orchestration__: I choose to deploy the containers using docker-compose in the production environment.
-  Other options are Docker Swarm or Kubernetes. Since this is a very simple project, I choose to use docker-compose
-  because its simplicity
-* __Container Registry__: This is the place were we store docker images. Ichoose to use the public
+  Other options are Docker Swarm or Kubernetes. Since this is a very simple project, I choose to use the easiest tool to do the job
+* __Container Registry__: This is the place were we store docker images. I choose to use the public
   docker registry (hub.docker.com). In a more realistic scenario, I've would have chosen
   the [container registry of GCP](https://cloud.google.com/container-registry))
 * __CI/CD__: I choose Jenkins as the CI/CD server and used pipelines as the tool
@@ -216,7 +215,7 @@ Add a github webhook using the following payload url: http://[jenkins-droplet pu
   * Vagrant plugin to spin up droplets in Digital Ocean
   * Vagrant plugin to set the `/etc/hosts` files in each droplet (I could not make work with the private IPs of the droplets
     so this part requires some thinking and testing)
-  * Vagrant Sync folders to provision configuration files to the droplets 
+  * Vagrant SyncFolders to provision configuration files to the droplets 
 
 # TO DO
 
