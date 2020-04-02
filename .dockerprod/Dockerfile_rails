@@ -17,6 +17,8 @@ COPY . /app
 ENV DEBIAN_FRONTEND noninteractive
 ARG NODE_MAJOR
 ARG BUNDLER_VERSION
+ARG RAILS_MASTER_KEY
+ENV RAILS_MASTER_KEY $RAILS_MASTER_KEY
 
 RUN apt-get update && \
     curl -sL https://deb.nodesource.com/setup_$NODE_MAJOR.x | bash - && \
@@ -82,5 +84,4 @@ RUN rm -r  test/* && \
 USER rails
 WORKDIR /app
 
-RUN bin/rails credentials:edit
 ENTRYPOINT ["bin/entrypoint.sh"]

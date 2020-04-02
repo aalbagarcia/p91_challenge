@@ -10,6 +10,8 @@ services:
         RUBY_VERSION: '2.6.5'
         BUNDLER_VERSION: '1.17.3'
         NODE_MAJOR: 10
+        RAILS_MASTER_KEY: "${RAILS_MASTER_KEY}"
+
     image: p91challenge/rails-prod:latest
     command: ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
     environment:
@@ -20,6 +22,7 @@ services:
       - RAILS_LOG_TO_STDOUT=true
       - ORGCLOUD_PG_HOST=10.110.0.3
       - ORGCLOUD_PG_USERNAME=postgres
+      - RAILS_MASTER_KEY="${RAILS_MASTER_KEY}"
     labels:
       - traefik.discoverable=yes
       - traefik.http.routers.rails.rule=Host(`p91-challenge.alfonsoalba.com`)

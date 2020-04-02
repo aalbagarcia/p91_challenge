@@ -22,8 +22,10 @@ pipeline {
         }
         stage('Build') {
             steps {
-               sh 'docker-compose -f docker-compose-production.yml build rails'
-               sh 'docker-compose -f docker-compose-production.yml build nginx'
+                withCredentials([string(credentialsId: 'rails_master_key', variable: 'RAILS_MASTER_KEY')]) {
+                   sh 'docker-compose -f docker-compose-production.yml build rails'
+                   sh 'docker-compose -f docker-compose-production.yml build nginx'
+                }
             }
         }
         stage('Publish') {
