@@ -234,5 +234,10 @@ why I made those decissions and write down things I had to skip in order to save
 - [ ] Use ansible instead of shell scripts to provision the droplets 
 - [ ] Add firewalls to the deployed droplets 
 - [ ] Properly store secrets for the production environment
+- [ ] The database droplet contains a postgresql database. We have truned off authentication
+  with username and password. Any client connecting from the private network is considered trusted an given access when login
+  as the `postgres` user. Proper credentials and docker secrets should be used.
+- [ ] When provisioning the database droplet, the private IP is hardcoded in several places. That is a terrible idea so 
+  we need to replace it with proper variables or scripts. Probably, using ansible will help us to solve this.  
   
     

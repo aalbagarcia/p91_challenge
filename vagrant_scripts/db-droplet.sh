@@ -1,5 +1,11 @@
-killall apt apt-get
-DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive
+
+while [ `pidof -s apt apt-get dpkg` ]
+do
+  echo "Waiting for apt to finish..."
+  sleep 1
+done
+
 apt update
 apt upgrade -y
 
@@ -9,3 +15,7 @@ apt-get update
 
 apt-get install -y postgresql-12
 
+cp /vagrant/postgresql/pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
+cp /vagrant/postgresql/conf.d/* /etc/postgresql/12/main/conf.d
+
+systemctl restart postgresql
