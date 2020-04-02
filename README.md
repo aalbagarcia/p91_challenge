@@ -161,6 +161,15 @@ to set the `/etc/hosts` file in all the droplets:
 > vagrant hostmanager --provider=digital_ocean
 ```
 
+### Create a private key for deployment
+
+```bash
+> ssh-keygen -t rsa -b 4096 -m PEM -f vagrant_scripts/jenkins-ssh-key
+```
+
+As discussed [here](https://stackoverflow.com/a/55740276/1715225), if the option `-m PEM` is is not used, the SSH Pipeline Steps plugin
+will not work.  
+
 ### Finish the installation of jenkins
 
 After provisioning the `jenkins-droplet` you will get a message like
@@ -185,6 +194,19 @@ Set up the following options:
 * Pipeline: Use `Pipeline script fom SCM` for the definition ot the pipeline 
   and select git as SCM. Use the URL for this repository.
 
+### Install extra plugins
+
+Using the Jenkins Plugin management interface, install the following plugins:
+
+* [SSH Pipeline Steps](https://plugins.jenkins.io/ssh-steps/)
+
+### Add credentials
+
+You need to configure the following credentials:
+
+* `aagdockerid_credentials` (type: `username/password`): the username and password of your dockerhub account
+* `rails_master_key` (type: `String`): The RAILS_MASTER_KEY 
+* `p91challenge_ssh_key` (type: `usernane with private key`): The private key used to log in at the node `core-droplet`
 
 ### Add a Github webhook
 
