@@ -9,6 +9,7 @@ services:
       args:
         RUBY_VERSION: '2.6.5'
         BUNDLER_VERSION: '1.17.3'
+        NODE_MAJOR: 10
     image: p91challenge/rails-prod:latest
     command: ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
     environment:
@@ -34,10 +35,7 @@ services:
       context: .
       dockerfile: .dockerprod/Dockerfile_nginx
       args:
-        RUBY_VERSION: '2.6.5'
-        BUNDLER_VERSION: '1.17.3'
         NGINX_VERSION: '1.17-alpine'
-        NODE_MAJOR: 10
     image: p91challenge/nginx-prod:latest
     labels:
       - traefik.discoverable=yes
