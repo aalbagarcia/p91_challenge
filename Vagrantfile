@@ -45,13 +45,17 @@ Vagrant.configure("2") do |config|
       provider.token = do_token
       provider.image = 'ubuntu-19-10-x64'
       provider.region = 'ams3'
-      provider.size = '512mb'
+      provider.size = '1gb'
       provider.backups_enabled = false
       provider.private_networking = true
       provider.ipv6 = false
       provider.monitoring = true
-      provider.ssh_key_name = do_ssh_key_name
+			provider.ssh_key_name = do_ssh_key_name
     end
+
+		# We use shell provisioning here.
+		# TODO: replace shell provisioning with ansible
+		config.vm.provision "shell", path: './vagrant_scripts/core-droplet.sh'
 	end
 
 
