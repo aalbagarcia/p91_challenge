@@ -1,8 +1,8 @@
 ARG RUBY_VERSION
+ARG BUNDLER_VERSION
 
 # See explanation below
 FROM ruby:$RUBY_VERSION AS assets
-ARG BUNDLER_VERSION
 
 # Configure bundler and PATH
 ENV LANG=C.UTF-8 \

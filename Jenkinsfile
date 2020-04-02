@@ -6,7 +6,7 @@ pipeline {
         DOCKER_HOST = 'localhost:2375'
     }
     stages {
-        stage('Build') { 
+        stage('Build Tests') {
             steps {
                sh 'docker-compose -f docker-compose-test.yml build runner'
             }
@@ -18,6 +18,20 @@ pipeline {
                 sh 'chmod 777 test/reports'
                 sh 'docker-compose -f docker-compose-test.yml run --rm runner'
                 junit 'test/reports/*.xml'
+            }
+        }
+        stage('Build') {
+            steps {
+               sh 'docker-compose -f docker-compose-production.yml build rails'
+               sh 'docker-compose -f docker-compose-production.yml build nginx'
+            }
+        }
+        stage('Publish') {
+            steps {
+                withDockerRegistry([ credentialsId: "aagdockerid_credentials", url: "" ]) {
+                    sh 'docker push p91challenge/rails-prod'
+                    sh 'docker push p91challenge/nginx-prod'
+                }
             }
         }
     }
