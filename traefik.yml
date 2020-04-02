@@ -1,0 +1,22 @@
+entryPoints:
+  web:
+    address: ":80"
+
+  web-secure:
+    address: ":443"
+providers:
+  docker:
+    swarmMode: false
+    constraints: "Label(`traefik.discoverable`,`yes`)"
+
+log:
+  level: debug
+certificatesResolvers:
+  letsencrypt:
+    acme:
+#      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      email: alfonso@alfonsoalba.com
+      storage: /acme.json
+      httpChallenge:
+        # used during the challenge
+        entryPoint: web

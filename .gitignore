@@ -37,3 +37,8 @@ yarn-debug.log*
 docker-data/
 /.vagrant
 /test/reports
+
+# Ignore production traefik files
+/acme.json
+
+/vagrant_scripts/jenkins-ssh-key

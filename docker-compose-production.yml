@@ -1,0 +1,60 @@
+version: '3.7'
+services:
+
+  # The docker service for the rails application
+  rails:
+    build:
+      context: .
+      dockerfile: .dockerprod/Dockerfile_rails
+      args:
+        RUBY_VERSION: '2.6.5'
+        BUNDLER_VERSION: '1.17.3'
+    image: p91challenge/rails-prod:latest
+    command: ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
+    environment:
+      - TZ=Europe/Madrid
+      - RAILS_ENV=${RAILS_ENV:-production}
+      - BOOTSNAP_CACHE_DIR=/bundle/bootsnap
+      - EDITOR=vi
+      - RAILS_LOG_TO_STDOUT=true
+      - ORGCLOUD_PG_HOST=10.110.0.3
+      - ORGCLOUD_PG_USERNAME=postgres
+    labels:
+      - traefik.discoverable=yes
+      - traefik.http.routers.rails.rule=Host(`p91-challenge.alfonsoalba.com`)
+      - traefik.http.routers.rails.entryPoints=web-secure
+      - traefik.http.routers.rails.service=rails-service
+      - traefik.http.routers.rails.priority=10
+      - traefik.http.routers.rails.tls.certResolver=letsencrypt
+      - traefik.http.services.rails-service.loadbalancer.server.port=3000
+
+  # The docker service for the web server used to serve the static assets
+  nginx:
+    build:
+      context: .
+      dockerfile: .dockerprod/Dockerfile_nginx
+      args:
+        RUBY_VERSION: '2.6.5'
+        BUNDLER_VERSION: '1.17.3'
+        NGINX_VERSION: '1.17-alpine'
+        NODE_MAJOR: 10
+    image: p91challenge/nginx-prod:latest
+    labels:
+      - traefik.discoverable=yes
+      - traefik.http.routers.nginx.rule=Host(`p91-challenge.alfonsoalba.com`) && (PathPrefix(`/public`) || PathPrefix(`/packs`))
+      - traefik.http.routers.nginx.entryPoints=web-secure
+      - traefik.http.routers.nginx.service=nginx-service
+      - traefik.http.routers.nginx.priority=50
+      - traefik.http.routers.nginx.tls.certResolver=letsencrypt
+      - traefik.http.services.nginx-service.loadbalancer.server.port=80
+
+  # The reverse proxy
+  traefik:
+    image: traefik:2.2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./acme.json:/acme.json

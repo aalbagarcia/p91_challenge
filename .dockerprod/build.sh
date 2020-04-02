@@ -1,0 +1,1 @@
+docker build --build-arg RUBY_VERSION=2.5.5 --build-arg NODE_MAJOR=8 --build-arg NODE_VERSION=8.17.0-1nodesource1 --build-arg BUNDLER_VERSION=1.17.3 --build-arg SSH_PRIVATE_KEY="`cat .ssh/mgnet_deploy_key`" -f .dockerprod/Dockerfile -t registry.ceronet.com/mgnet/rails:latest .

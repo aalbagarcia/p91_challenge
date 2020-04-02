@@ -1,0 +1,9 @@
+.git/
+tmp/
+log/
+node_modules/
+storage/
+vagrant_scripts/
+docker-compose*
+Vagrantfile
+Jenkinsfile

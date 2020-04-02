@@ -239,5 +239,7 @@ why I made those decissions and write down things I had to skip in order to save
   as the `postgres` user. Proper credentials and docker secrets should be used.
 - [ ] When provisioning the database droplet, the private IP is hardcoded in several places. That is a terrible idea so 
   we need to replace it with proper variables or scripts. Probably, using ansible will help us to solve this.  
+- [ ] Do not use the `:latest` docker image tag in the `docker-compose-production.yml` file. Use proper image tags
+  set during the deployment stage in Jenkins 
   
     

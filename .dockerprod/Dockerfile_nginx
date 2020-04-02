@@ -1,0 +1,13 @@
+ARG RUBY_VERSION
+ARG NGINX_VERSION
+# See explanation below
+FROM p91challenge/rails-prod as assets
+
+#######################################################################################################################
+# STAGE 2
+#######################################################################################################################
+FROM nginx:$NGINX_VERSION
+
+COPY --from=assets --chown=nginx:nginx /app/public /usr/share/nginx/html/public
+COPY --from=assets --chown=nginx:nginx /app/public/packs /usr/share/nginx/html/packs
+
