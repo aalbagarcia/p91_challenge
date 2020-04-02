@@ -26,7 +26,7 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([string(credentialsId: 'rails_master_key', variable: 'RAILS_MASTER_KEY')]) {
-                   sh 'docker-compose -f docker-compose-production.yml build rails'
+                   sh 'RAILS_MASTER_KEY=$RAILS_MASTER_KEY docker-compose -f docker-compose-production.yml build rails'
                    sh 'docker-compose -f docker-compose-production.yml build nginx'
                 }
             }
@@ -42,17 +42,20 @@ pipeline {
         stage("Deploy") {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'p91challenge_ssh_key', keyFileVariable: 'identity', passphraseVariable: 'passphrase', usernameVariable: 'userName')]) {
-                     script {
-                          def remote = [:]
-                          remote.name = "10.110.0.4"
-                          remote.host = "10.110.0.4"
-                          remote.allowAnyHosts = true
-                          remote.user = userName
-                          remote.identityFile = identity
-                          remote.passphrase = ''
-                          sshCommand remote: remote, command: 'cd ~/p91-challenge && docker-compose -f docker-compose-production.yml pull'
-                          sshCommand remote: remote, command: 'cd ~/p91-challenge && docker-compose -f docker-compose-production.yml down'
-                          sshCommand remote: remote, command: 'cd ~/p91-challenge && docker-compose -f docker-compose-production.yml up -d'
+                     withCredentials([string(credentialsId: 'rails_master_key', variable: 'RAILS_MASTER_KEY')]) {
+                         script {
+                              def remote = [:]
+                              remote.name = "10.110.0.4"
+                              remote.host = "10.110.0.4"
+                              remote.allowAnyHosts = true
+                              remote.user = userName
+                              remote.identityFile = identity
+                              remote.passphrase = ''
+                              sshCommand remote: remote, command: 'cd ~/p91-challenge && docker-compose -f docker-compose-production.yml pull'
+                              sshCommand remote: remote, command: 'cd ~/p91-challenge && docker-compose -f docker-compose-production.yml down'
+                              sshCommand remote: remote, command: "cd ~/p91-challenge && git pull && RAILS_MASTER_KEY=$RAILS_MASTER_KEY docker-compose -f docker-compose-production.yml run rails rails credentials:edit"
+                              sshCommand remote: remote, command: "cd ~/p91-challenge && RAILS_MASTER_KEY=$RAILS_MASTER_KEY docker-compose -f docker-compose-production.yml up -d"
+                         }
                      }
                 }
             }
