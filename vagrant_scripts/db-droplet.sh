@@ -1,6 +1,6 @@
 export DEBIAN_FRONTEND=noninteractive
 
-while [ `pidof -s apt apt-get dpkg` ]
+while [ `pidof -d ',' apt apt-get dpkg` ]
 do
   echo "Waiting for apt to finish..."
   sleep 1

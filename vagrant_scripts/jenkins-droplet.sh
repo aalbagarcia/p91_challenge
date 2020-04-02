@@ -1,7 +1,13 @@
 # TODO: Create an ansible playlist for this shell script
 
-killall apt apt-get
-DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive
+
+while [ `pidof -d ',' apt apt-get dpkg` ]
+do
+  echo "Waiting for apt to finish..."
+  sleep 1
+done
+
 apt update
 apt upgrade -y
 
