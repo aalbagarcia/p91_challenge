@@ -82,4 +82,5 @@ RUN rm -r  test/* && \
 USER rails
 WORKDIR /app
 
+RUN bin/rails credentials:edit
 ENTRYPOINT ["bin/entrypoint.sh"]
