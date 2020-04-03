@@ -266,5 +266,7 @@ why I made those decissions and write down things I had to skip in order to save
   we need to replace it with proper variables or scripts. Probably, using ansible will help us to solve this.  
 - [ ] Do not use the `:latest` docker image tag in the `docker-compose-production.yml` file. Use proper image tags
   set during the deployment stage in Jenkins 
+- [ ] The ssh deployment does not check that the containers are correctly deployed. That would cause
+  problems like seeing jenkins builds in green status but the containers not being deployed  
   
     
