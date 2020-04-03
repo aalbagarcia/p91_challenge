@@ -219,6 +219,9 @@ Add a github webhook using the following payload url: http://[jenkins-droplet pu
   project, but I decided to stick with the most known technology
 * __Container orchestration__: I choose to deploy the containers using docker-compose in the production environment.
   Other options are Docker Swarm or Kubernetes. Since this is a very simple project, I choose to use the easiest tool to do the job
+* __Reverse proxy__: I used [traefik](https://containo.us/traefik/) as the reverse proxy because its integration with docker events. It also allows me
+  to manage let's encrypt certificates with almost no effort.
+* __Web server for static assets__: I used nginx  
 * __Container Registry__: This is the place were we store docker images. I choose to use the public
   docker registry (hub.docker.com). In a more realistic scenario, I've would have chosen
   the [container registry of GCP](https://cloud.google.com/container-registry))
