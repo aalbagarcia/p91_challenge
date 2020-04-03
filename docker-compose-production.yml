@@ -22,7 +22,7 @@ services:
       - RAILS_LOG_TO_STDOUT=true
       - ORGCLOUD_PG_HOST=10.110.0.3
       - ORGCLOUD_PG_USERNAME=postgres
-      - RAILS_MASTER_KEY="${RAILS_MASTER_KEY}"
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
     labels:
       - traefik.discoverable=yes
       - traefik.http.routers.rails.rule=Host(`p91-challenge.alfonsoalba.com`)
