@@ -53,8 +53,7 @@ pipeline {
                               remote.passphrase = ''
                               sshCommand remote: remote, command: 'cd ~/p91-challenge && docker-compose -f docker-compose-production.yml pull'
                               sshCommand remote: remote, command: 'cd ~/p91-challenge && docker-compose -f docker-compose-production.yml down'
-                              sshCommand remote: remote, command: "cd ~/p91-challenge && git pull && RAILS_MASTER_KEY=$RAILS_MASTER_KEY docker-compose -f docker-compose-production.yml run rails rails credentials:edit"
-                              sshCommand remote: remote, command: "cd ~/p91-challenge && RAILS_MASTER_KEY=$RAILS_MASTER_KEY docker-compose -f docker-compose-production.yml up -d"
+                              sshCommand remote: remote, command: "cd ~/p91-challenge && git fetch && git reset --hard origin/master && RAILS_MASTER_KEY=$RAILS_MASTER_KEY docker-compose -f docker-compose-production.yml up -d"
                          }
                      }
                 }
